@@ -1,0 +1,7 @@
+.mainCard {
+    display: inline-block;
+    float: left;
+    margin: 2%;
+    
+    border-radius: 5px;
+}
