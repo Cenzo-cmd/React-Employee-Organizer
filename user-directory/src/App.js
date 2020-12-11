@@ -3,6 +3,7 @@ import './App.css';
 import API from "./Utils/API"
 import Card from "./components/Card";
 import Navbar from "./components/Navbar";
+import { sortedUsers } from "./Utils/sortHelpers";
 
 // import Wrapper from "./components/Wrapper";
 
@@ -11,6 +12,8 @@ function App() {
 
   const [employeeData, setEmployeeData] = useState([]);
   const [employeeArr, setEmployeeArr] = useState([]);
+  const [firstNameAscOrder, setFirstNameAscOrder] = useState(true);
+  const [lastNameAscOrder, setLastNameAscOrder] = useState(true);
 
   useEffect(() => {
     API.getEmployees().then(response => {
@@ -19,27 +22,14 @@ function App() {
     })
   }, []);
 
-  function sortedUsers() {
-    const sorted = employeeData.sort((a, b) =>
-      a.name.first.localeCompare(b.name.first)
-    )
-    setEmployeeData([...sorted]);
-  }
-
-  function reverseSorted() {
-    const reverseSort = employeeData.sort((a, b) =>
-      a.name.last.localeCompare(b.name.last)
-    )
-    setEmployeeData([...reverseSort]);
-  }
 
   function filterUsers(e) {
-    const filterByFirst = employeeArr.filter((a) => a.name.first.toLowerCase().includes(e.target.value.toLowerCase()));
+    const filterByFirst = employeeArr.filter((a) => a.name.first.toLowerCase().startsWith(e.target.value.toLowerCase()));
     setEmployeeData(filterByFirst);
   }
 
   function filterUsersLast(e) {
-    const filteredByLast = employeeArr.filter((a) => a.name.last.toLowerCase().includes(e.target.value.toLowerCase()));
+    const filteredByLast = employeeArr.filter((a) => a.name.last.toLowerCase().startsWith(e.target.value.toLowerCase()));
     setEmployeeData(filteredByLast);
   }
 
@@ -69,9 +59,12 @@ function App() {
       <Navbar />
       <br />
       <div className="buttons">
-        <button className="button" onClick={sortedUsers}>Sort first name A-Z</button>
-        <button className="button" onClick={reverseSorted}>Sort last name A-Z</button>
+        <button className="button" onClick={() => sortedUsers(employeeData, setEmployeeData, firstNameAscOrder, setFirstNameAscOrder, "first")}>Sort first name A-Z</button>
+
+        <button className="button" onClick={() => sortedUsers(employeeData, setEmployeeData, lastNameAscOrder, setLastNameAscOrder, "last")}>Sort last name A-Z</button>
+
         <input className="button" type="text" placeholder="Search user by first name" onChange={filterUsers} />
+
         <input className="button" type="text" placeholder="Search user by last name" onChange={filterUsersLast} />
       </div>
       <div>
